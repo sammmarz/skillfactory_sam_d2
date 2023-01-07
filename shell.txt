@@ -1,0 +1,95 @@
+
+(venv) PS C:\Users\arzko\django_project\newspaper1\project> python manage.py shell         
+Python 3.11.0 (main, Oct 24 2022, 18:26:48) [MSC v.1933 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from news.models import *
+>>> user1 = User.objects.create(username='Serg', first_name='Sokolov') 
+>>> Author.objects.create(account=user1)   
+<Author: Author object (1)>
+>>> user2 =User.objects.create(username='Sara', first_name='Konor') 
+>>> Author.objects.create(account=user2)
+<Author: Author object (2)>
+>>> Category.objects.create(categoryName='IT')   
+<Category: Category object (1)>
+>>> Category.objects.create(categoryName='Sport') 
+<Category: Category object (2)>
+>>> Category.objects.create(categoryName='Fashion') 
+<Category: Category object (3)>
+>>> Category.objects.create(categoryName='Education') 
+<Category: Category object (4)>
+>>> Category.objects.create(categoryName='Scool')  
+<Category: Category object (5)>
+>>> Post.objects.create(authorArticle=Author.objects.get(account=User.objects.get(username='Serg')), textContent='NW', header='world cup', postText='pam pam pam pa
+ram')
+<Post: Post object (1)>
+>>> Post.objects.create(authorArticle=Author.objects.get(account=User.objects.get(username='Serg')), textContent='AR', header='head345', postText='asasa saspam pam
+ pam param')
+<Post: Post object (2)>
+>>> Post.objects.create(authorArticle=Author.objects.get(account=User.objects.get(username='Sara')), textContent='AR', header='head475', postText='rise of the mach
+ines')
+<Post: Post object (3)>
+>>> p1 = Post.objects.get(pk=1) 
+>>> p2 = Post.objects.get(pk=2) 
+>>> p3 = Post.objects.get(pk=3) 
+>>> c1 = Category.objects.get(categoryName='IT') 
+>>> c2 = Category.objects.get(pk=2) 
+>>> c3 = Category.objects.get(pk=3) 
+>>> c4 = Category.objects.get(pk=4) 
+>>> p1.textCategory.add(c1,c2) 
+>>> p2.textCategory.add(c3)    
+>>> p3.textCategory.add(c4)
+>>> Comment.objects.create(userComment = User.objects.get(username='Serg'), commentPost = Post.objects.get(pk=1), commentText='Comment Serga1',rating =0) 
+<Comment: Comment object (1)>
+>>> Comment.objects.create(userComment = User.objects.get(username='Serg'), commentPost = Post.objects.get(pk=2), commentText='Comment Serga1',rating =0) 
+<Comment: Comment object (2)>
+>>> Comment.objects.create(userComment = User.objects.get(username='Sara'), commentPost = Post.objects.get(pk=2), commentText='Comment Sara1',rating =0)  
+<Comment: Comment object (3)>
+>>> Comment.objects.create(userComment = User.objects.get(username='Sara'), commentPost = Post.objects.get(pk=3), commentText='Comment Sara2',rating =0) 
+<Comment: Comment object (4)>
+>>> Post.objects.get(pk=1).like()
+1
+>>> Post.objects.get(pk=1).like()
+2
+>>> Post.objects.get(pk=1).like()
+3
+>>> Post.objects.get(pk=2).like() 
+1
+>>> Post.objects.get(pk=2).like()
+2
+>>> Post.objects.get(pk=3).like() 
+1
+>>> Post.objects.get(pk=2).dislike() 
+1
+>>> Post.objects.get(pk=3).like()    
+2
+>>> Comment.objects.get(pk=1).like()    
+>>> Comment.objects.get(pk=1).like()
+>>> Comment.objects.get(pk=2).like() 
+>>> Comment.objects.get(pk=3).like() 
+>>> Comment.objects.get(pk=4).like() 
+>>> Comment.objects.get(pk=1).dislike() 
+>>> Author.objects.get(account=User.objects.get(username='Serg')).update_rating() 
+>>> Author.objects.get(account=User.objects.get(username='Sara')).update_rating()   
+>>> a1 = Author.objects.get(account=User.objects.get(username='Serg')) 
+>>> a1.ratingAuthor
+14
+>>> a1 = Author.objects.get(account=User.objects.get(username='Sara'))  
+>>> a1.ratingAuthor                                                     
+8
+>>> best=Author.objects.all().order_by('-ratingAuthor').values('account','ratingAuthor')[0] 
+>>> print(best) 
+{'account': 1, 'ratingAuthor': 14}
+>>> print(User.objects.get(id='1')) 
+Serg
+>>> best_article=Post.objects.all().order_by('-rating').values('creationTime','authorArticle','rating','header')[0] 
+>>> print(best_article)                                                                                             
+{'creationTime': datetime.datetime(2023, 1, 7, 14, 25, 20, 770308, tzinfo=datetime.timezone.utc), 'authorArticle': 1, 'rating': 3, 'header': 'world cup'}
+>>> a= Post.objects.get(header='world cup').preview()  
+>>> print(a) 
+pam pam pam param...
+>>> b = (Post.objects.get(header ='world cup')).comment_set.all().values('rating','commentText','commentTime','userComment')         
+>>> print(b) 
+<QuerySet [{'rating': 1, 'commentText': 'Comment Serga1', 'commentTime': datetime.datetime(2023, 1, 7, 14, 48, 46, 649896, tzinfo=datetime.timezone.utc), 'userComm
+ent': 1}]>
+>>>
